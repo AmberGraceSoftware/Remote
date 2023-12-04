@@ -1,0 +1,26 @@
+{
+  "name": "remote",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "Packages": {
+        "$className": "Folder",
+        "Remote": {
+          "$path": "src"
+        }
+      },
+      "DevPackages": {
+        "$path": "DevPackages"
+      },
+      "Tests": {
+        "$path": "tests"
+      }
+    },
+    "ServerScriptService":{
+      "TestRunner": {
+        "$path": "workflowtools/TestRunner.server.luau"
+      }
+    }
+  }
+}

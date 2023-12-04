@@ -1,0 +1,27 @@
+order = ["Introduction"]
+
+
+[[classOrder]]
+collapsed = false
+classes = ["Remote"]
+
+gitSourceBranch = "main"
+
+[docusaurus]
+url = "https://remote.ambergracesoftware.com"
+baseUrl = "/"
+tagline = "A Library for Building Roblox User Interfaces"
+
+[navbar]
+title = ""
+
+[navbar.logo]
+alt = "Remote"
+src = "logo.svg"
+
+[home]
+enabled = true
+includeReadme = false
+
+[footer]
+copyright = "Written by Amber Grace. Built with Moonwave and Docusaurus"

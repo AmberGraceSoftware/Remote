@@ -1,0 +1,35 @@
+name: Publish Wally Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+      - name: Generate minimal project structure
+        run: |
+          mkdir temp
+          cp -r src temp
+          cp wally.toml temp/src
+          cp aftman.toml temp/src
+          cp README.md temp/src
+          cp LICENSE temp/src
+          cp default.project.json temp/src
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.3.0
+      - name: Clean up temp directory
+        run: |
+          rm wally.toml
+          rm aftman.toml
+          aftman install
+          rm default.project.json
+      - name: Push Release to Wally
+        env:
+          WALLY_AUTH: ${{ secrets.WALLY_AUTH }}
+        run: |
+          cd temp/src
+          wally login --token $WALLY_AUTH
+          wally publish
