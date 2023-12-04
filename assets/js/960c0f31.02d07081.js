@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[998],{63891:e=>{e.exports=JSON.parse('{"sourceUrl":"https://github.com/AmberGraceSoftware/Remote/blob/master","baseUrl":"/","classOrder":[{"collapsed":false,"classes":["Remote"],"gitSourceBranch":"main"}],"apiCategories":[]}')}}]);
