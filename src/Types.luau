@@ -15,12 +15,12 @@ export type Event = {
     Destroy: (self: Event) -> (),
 }
 export type Function = {
-    Invoke: (self: Event, ...any) -> any,
+    Invoke: (self: Function, ...any) -> any,
     OnInvoke: (
-        self: Event,
+        self: Function,
         callback: (player: Player, ...unknown) -> any
     ) -> (),
-    Destroy: (self: Event) -> (),
+    Destroy: (self: Function) -> (),
 }
 export type State<T = any?> = {
     Get: (self: State<T>) -> T,
