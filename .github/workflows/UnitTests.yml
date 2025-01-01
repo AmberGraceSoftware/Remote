@@ -1,0 +1,24 @@
+name: Unit Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  workflow_dispatch:
+
+jobs:
+  test:
+    if: '! github.event.pull_request.draft'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.3.0
+      - name: Verify Proof-Of-Testing with current source file structure
+        run: lune run workflowtools/ValidateProofOfTesting.luau
