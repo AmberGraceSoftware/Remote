@@ -19,8 +19,8 @@ jobs:
         run: wally install
       - name: Generate Rojo Sourcemap
         run: rojo sourcemap --output sourcemap.json
-      - name: Re-Export Wally Package Types
-        run: wally-package-types --sourcemap sourcemap.json ./Packages
+    #   - name: Re-Export Wally Package Types
+    #     run: wally-package-types --sourcemap sourcemap.json ./Packages
       - name: Download latest Roblox API types
         run: |
           curl \
