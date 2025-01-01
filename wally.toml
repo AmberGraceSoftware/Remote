@@ -1,7 +1,7 @@
 [package]
 name = "ambergracesoftware/remote"
 description = "Easily Managed Remote Events, Functions, and State"
-version = "0.0.1"
+version = "0.0.2"
 authors = [ "Amber Grace" ]
 license = "MIT"
 registry = "https://github.com/UpliftGames/wally-index"
