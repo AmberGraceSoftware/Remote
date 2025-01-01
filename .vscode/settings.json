@@ -1,0 +1,15 @@
+{
+    "luau-lsp.sourcemap.autogenerate": true,
+    "[lua]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "JohnnyMorganz.stylua",
+    },
+    "[luau]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "JohnnyMorganz.stylua",
+    },
+    "stylua.configPath": "stylua.toml",
+    "stylua.searchBinaryInPATH": false,
+    "stylua.searchParentDirectories": true,
+    "stylua.targetReleaseVersion": "latest",
+}

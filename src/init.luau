@@ -11,9 +11,15 @@
     License: MIT
 ]]
 
+local Event = require(script.Event)
+local Function = require(script.Function)
+local State = require(script.State)
 local Types = require(script.Types)
 
 export type Namespace = Types.Namespace
+export type Event = Types.Event
+export type Function = Types.Function
+export type State<T = any?> = Types.State<T>
 
 --[=[
     @class Remote
@@ -31,31 +37,30 @@ export type Namespace = Types.Namespace
 ]=]
 local Remote = {}
 
-
 --[=[
     @function Namespace
     @within Remote
-    @param ... string
+    @param namespacePrefix string
     @return Remote
     
     Creates a copy of the Remote library that automatically prefixes key
-    arguments to all Remote library function calls.
+    arguments to all Remote library function calls. Conventionally uses dots
+    to prefix keys within the namespace.
 
     For example:
     ```lua
-    local wearOutfit = Remote.Function("AvatarEditor", "WearOutfit")
-    local equipItem = Remote.Event("AvatarEditor", "EquipItem")
-    local itemIds = Remote.State("AvatarEditor", "EquippedItemIDs", {} :: {string})
+    local wearOutfit = Remote.Function("Avatar.WearOutfit")
+    local equipItem = Remote.Event("Avatar.EquipItem")
+    local itemIds = Remote.State("Avatar.EquippedItemIDs", {} :: {string})
     ```
 
-    In this example, the "AvatarEditor" key being used can converted to a
-    namespace:
+    In the instance above, the prefix "Avatar" can converted to a namespace:
     ```lua
-    local AvatarRemotes = Remote.Namespace("AvatarEditor")
+    local AvatarRemotes = Remote.Namespace("Avatar")
     ```
 
     Objects can then be created/accessed using the same API as the [Remote]()
-    library through the `AvatarRemotes` namespace:
+    library through the `Avatar` namespace:
     ```lua
     local wearOutfit = AvatarRemotes.Function("WearOutfit")
     local equipItem = AvatarRemotes.Event("EquipItem")
@@ -63,9 +68,8 @@ local Remote = {}
     ```
     
 ]=]
-Remote.Namespace = function(...: string): Namespace
-    local keys = table.pack(...)
-    
+Remote.Namespace = function(namespaceKey: string): Namespace
+    namespaceKey ..= "."
     return table.freeze(setmetatable({}, {
         __index = function(_self: any, methodName: string): any
             local method = (Remote :: any)[methodName]
@@ -73,16 +77,8 @@ Remote.Namespace = function(...: string): Namespace
                 return nil
             end
             if typeof(method) == "function" then
-                return function(...: any)
-                    local postArgs = table.pack(...)
-                    local newArgs = table.create(#keys + #postArgs)
-                    for i = 1, keys.n do
-                        newArgs[i] = keys[i]
-                    end
-                    for i = 1, postArgs.n do
-                        newArgs[keys.n + i] = postArgs[i]
-                    end
-                    return method(table.unpack(newArgs))
+                return function(key: string, ...: any)
+                    return method(namespaceKey .. key, ...)
                 end
             end
 
@@ -91,4 +87,20 @@ Remote.Namespace = function(...: string): Namespace
     })) :: any
 end
 
-return Remote :: Namespace
+Remote.Event = function(key: string)
+    return Event.new(key, true)
+end
+
+Remote.UnreliableEvent = function(key: string)
+    return Event.new(key, false)
+end
+
+Remote.Function = function(key: string)
+    return Function.new(key)
+end
+
+Remote.State = function(key: string, placeholderValue: any?)
+    return State.new(key, placeholderValue)
+end
+
+return (Remote :: any) :: Namespace
