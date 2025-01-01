@@ -10,14 +10,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TestEZ = require(ReplicatedStorage.DevPackages.TestEZ)
 
 type TestResults = {
-    errors: {string},
+    errors: { string },
     failureCount: number,
     skippedCount: number,
     successCount: number,
 }
 
 -- Polynomial rolling hash checksum
-local function generateSourceFileChecksum(sourceStrings: {string})
+local function generateSourceFileChecksum(sourceStrings: { string })
     local base = 256
     local prime = 1000000007
 
@@ -44,8 +44,8 @@ local function generateSourceFileChecksum(sourceStrings: {string})
     return string.format("%x", totalHash)
 end
 
-local function captureSourceFileStrings(rootInstances: {Instance})
-    local objects: {ModuleScript} = {}
+local function captureSourceFileStrings(rootInstances: { Instance })
+    local objects: { ModuleScript } = {}
     for _, root in rootInstances do
         if root:IsA("ModuleScript") then
             table.insert(objects, root)
@@ -74,11 +74,10 @@ local function TestRunner()
     -- Generate a checksum of the source code
     local sourceRoots = {
         ReplicatedStorage.Tests,
-        ReplicatedStorage.Packages.Remote
+        ReplicatedStorage.Packages.Remote,
     }
-    local sourceChecksum = generateSourceFileChecksum(
-        captureSourceFileStrings(sourceRoots)
-    )
+    local sourceChecksum =
+        generateSourceFileChecksum(captureSourceFileStrings(sourceRoots))
 
     -- Copy / hide old source trees to de-cache modules for re-runs in studio
     local tempRoots = {}
@@ -90,16 +89,16 @@ local function TestRunner()
         oldRootParents[root] = root.Parent
         root.Parent = nil
     end
-    
+
     -- Run and intercept default TestEZ output
     local testResults: TestResults? = nil
     local interceptReporter = {
         report = function(results: TestResults)
             TestEZ.Reporters.TextReporter.report(results)
             testResults = results
-        end
+        end,
     }
-    TestEZ.TestBootstrap:run({ReplicatedStorage.Tests}, interceptReporter)
+    TestEZ.TestBootstrap:run({ ReplicatedStorage.Tests }, interceptReporter)
 
     -- Put old modules back into place and delete cloned ones
     for _, root in tempRoots do
@@ -129,15 +128,15 @@ local function TestRunner()
                 success_str
             )
         else
-            proof_checksum = string.format(
-                "%s_0_0_0_%s",
-                sourceChecksum,
-                success_str
-            )
+            proof_checksum =
+                string.format("%s_0_0_0_%s", sourceChecksum, success_str)
         end
-        print("\n\tProof-of-testing checksum (paste into " ..
-            "'testing_proof_checksum.txt' file in the root project " .. 
-            "directory): ", proof_checksum)
+        print(
+            "\n\tProof-of-testing checksum (paste into "
+                .. "'testing_proof_checksum.txt' file in the root project "
+                .. "directory): ",
+            proof_checksum
+        )
     end)
 end
 
